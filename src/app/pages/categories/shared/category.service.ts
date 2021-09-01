@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs'
 import { map, catchError, flatMap } from 'rxjs/operators'
 import { Category } from './category.model'
 
-Injectable({
+@Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
