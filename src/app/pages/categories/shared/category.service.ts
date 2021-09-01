@@ -4,8 +4,7 @@ import { Observable, throwError } from 'rxjs'
 import { map, catchError, flatMap } from 'rxjs/operators'
 import { Category } from './category.model'
 
-
-@Injectable({
+Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
@@ -54,7 +53,7 @@ export class CategoryService {
     .pipe(
       catchError(this.handlerError),
       map(() => null)
-      );
+      )
   }
   //private methods
   private jsonDataToCategories(jsonData: any[]): Category[] {
