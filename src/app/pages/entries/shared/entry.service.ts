@@ -17,7 +17,7 @@ export class EntryService {
     return this.http.get(this.apiPath)
       .pipe(
         catchError(this.handlerError),
-        map(this.jsonDataToCategories)
+        map(this.jsonDataToEntries)
       );
   }
 
@@ -56,9 +56,12 @@ export class EntryService {
       )
   }
   //private methods
-  private jsonDataToCategories(jsonData: any[]): Entry[] {
+  private jsonDataToEntries(jsonData: any[]): Entry[] {
     const entries: Entry[] = [];
-    jsonData.forEach(element => entries.push(element as Entry));
+    jsonData.forEach(element => {
+      const entry = Object.assign(new Entry(), element); //ao inves de cats 'as Entry' para poder executar os metodos precisamos de object
+      entries.push(entry);
+    });
     return entries;
   }
 
