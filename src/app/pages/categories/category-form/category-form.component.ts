@@ -86,7 +86,7 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
   }
 
   private createCategory(){
-    const category: Category = Object.assign(new Category(), this.categoryForm.value); //pega os valores e joga em ibject novo
+    const category: Category = Object.assign(new Category(), this.categoryForm.value); //pega os valores do form e joga em object novo
     this.categoryService.create(category)
     .subscribe(
       (category) => this.actionsForSuccess(category),
@@ -95,7 +95,12 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
   }
 
   private updateCategory(){
-
+    const category: Category = Object.assign(new Category(), this.categoryForm.value); //pega os valores do form e joga em object novo
+    this.categoryService.update(category)
+    .subscribe(
+      (category) => this.actionsForSuccess(category),
+      (error) => this.actionsForError(error)
+    )
   }
 
   private actionsForSuccess(category: Category){
