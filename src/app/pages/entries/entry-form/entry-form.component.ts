@@ -140,6 +140,7 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
   }
 
   private createEntry(){
+    
     const entry: Entry = Object.assign(new Entry(), this.entryForm.value); //pega os valores do form e joga em object novo
     this.entryService.create(entry)
     .subscribe(
