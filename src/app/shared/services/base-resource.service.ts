@@ -69,6 +69,21 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
         return jsonData as T;
     }
 
+     //private methods
+   /* protected jsonDataToResourcesOrigin(jsonData: any[]): T[] {
+        const entries: T[] = [];
+        //jsonData.forEach(element => entries.push(element as Entry)); se tiver metodo não conseuimos chamar 
+        jsonData.forEach(element => {
+        const entry = Object.assign(new T(), element); //ao inves de cats 'as Entry' para poder executar os metodos precisamos de object
+        entries.push(entry);
+        });
+        return entries;
+    }
+
+    protected jsonDataToResourceOrigin(jsonData: any): T {
+        const entries: T[] = [];
+        return jsonData as T;
+    }*/
     protected handlerError(error: any): Observable<any> {
         console.log("Erro na requisição => ", error);
         return throwError(error);
