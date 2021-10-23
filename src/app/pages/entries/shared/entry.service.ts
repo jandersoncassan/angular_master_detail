@@ -17,20 +17,21 @@ export class EntryService extends BaseResourceService<Entry>{
   }
 
   create(entry: Entry): Observable<Entry> {
-   return this.categoryService.getById(entry.categoryId).pipe(
-        flatMap(category => {
-          entry.category = category;
-          return super.create(entry);
-        })
-    );
+   return this.saveOrUpdate(entry, super.create.bind(this));  //precisamos passar o this por causa do contexto
   }
 
   update(entry: Entry): Observable<Entry> {
-     return this.categoryService.getById(entry.categoryId).pipe(
+    return this.saveOrUpdate(entry, super.update.bind(this)); //mesmo esquema do baseResource
+  }
+
+ // private saveOrUpdate(entry: Entry, saveOrUpdate: any): Observable<Entry>{
+  private saveOrUpdate(entry: Entry, saveOrUpdateFn: (entry: Entry) => Observable<Entry>){
+    return this.categoryService.getById(entry.categoryId).pipe(
       flatMap(category => {
         entry.category = category;
-        return super.update(entry);
-      })
-    );  
+        return saveOrUpdateFn(entry);
+      }),
+      catchError(this.handlerError)
+  );
   }
 }
