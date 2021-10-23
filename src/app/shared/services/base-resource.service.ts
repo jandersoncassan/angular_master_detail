@@ -10,15 +10,21 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
     
     protected http: HttpClient;
 
-    constructor(protected apiPath: string, protected injector: Injector){
+    constructor(
+      protected apiPath: string, 
+      protected injector: Injector,
+      protected jsonDataToResourceFn: (jsonData: any) => T
+      ){
         this.http = injector.get(HttpClient);
     }
 
+    //qdo passamos uma função como parametro e precisarmos usar o 'this' precisamos fazer o abaixo ou 1 ou outro .. não dá para chamar direto map(metodo)
     getAll(): Observable<T[]> {
         return this.http.get(this.apiPath)
           .pipe(
-            catchError(this.handlerError),
-            map(this.jsonDataToResources)
+           // map((jsonData: Array<any>)=> this.jsonDataToResources(jsonData)), //OU ABAIXO
+            map(this.jsonDataToResources.bind(this)),
+            catchError(this.handlerError)
           );
       }
     
@@ -26,16 +32,16 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
         const url = `${this.apiPath}/${id}`;
         return this.http.get(url)
           .pipe(
-            catchError(this.handlerError),
-            map(this.jsonDataToResource)
+            map(this.jsonDataToResource.bind(this)),
+            catchError(this.handlerError)
           );
       }
     
       create(resource: T): Observable<T> {
         return this.http.post(this.apiPath, resource)
           .pipe(
-            catchError(this.handlerError),
-            map(this.jsonDataToResource)
+            map(this.jsonDataToResource.bind(this)),
+            catchError(this.handlerError)
           );
       }
     
@@ -43,8 +49,8 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
         const url = `${this.apiPath}/${resource.id}`;
         return this.http.put(url, resource)
           .pipe(
-            catchError(this.handlerError),
-            map(() => resource)
+            map(() => resource),
+            catchError(this.handlerError)
           );
       }
     
@@ -52,38 +58,22 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
         const url = `${this.apiPath}/${id}`;
         return this.http.delete(url)
         .pipe(
-          catchError(this.handlerError),
-          map(() => null)
+          map(() => null),
+          catchError(this.handlerError)
           )
       }
 
      
     protected jsonDataToResources(jsonData: any[]): T[] {
         const resources: T[] = [];
-        jsonData.forEach(element => resources.push(element as T));
+        jsonData.forEach(element => resources.push(this.jsonDataToResourceFn(element)));
         return resources;
     }
 
     protected jsonDataToResource(jsonData: any): T {
-        const resources: T[] = [];
-        return jsonData as T;
+        return this.jsonDataToResourceFn(jsonData);
     }
-
-     //private methods
-   /* protected jsonDataToResourcesOrigin(jsonData: any[]): T[] {
-        const entries: T[] = [];
-        //jsonData.forEach(element => entries.push(element as Entry)); se tiver metodo não conseuimos chamar 
-        jsonData.forEach(element => {
-        const entry = Object.assign(new T(), element); //ao inves de cats 'as Entry' para poder executar os metodos precisamos de object
-        entries.push(entry);
-        });
-        return entries;
-    }
-
-    protected jsonDataToResourceOrigin(jsonData: any): T {
-        const entries: T[] = [];
-        return jsonData as T;
-    }*/
+    
     protected handlerError(error: any): Observable<any> {
         console.log("Erro na requisição => ", error);
         return throwError(error);

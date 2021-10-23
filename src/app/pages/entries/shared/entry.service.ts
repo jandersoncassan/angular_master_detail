@@ -13,7 +13,7 @@ import {CategoryService} from '../../categories/shared/category.service';
 export class EntryService extends BaseResourceService<Entry>{
 
   constructor(private categoryService: CategoryService, protected injector: Injector ) { 
-    super('api/entries', injector);
+    super('api/entries', injector, Entry.fromJson);
   }
 
   create(entry: Entry): Observable<Entry> {
@@ -31,23 +31,6 @@ export class EntryService extends BaseResourceService<Entry>{
         entry.category = category;
         return super.update(entry);
       })
-  );
-
-  
-  }
-  //private methods
-  protected jsonDataToResources(jsonData: any[]): Entry[] {
-    const entries: Entry[] = [];
-    //jsonData.forEach(element => entries.push(element as Entry)); se tiver metodo não conseuimos chamar 
-    jsonData.forEach(element => {
-      const entry = Object.assign(new Entry(), element); //ao inves de cats 'as Entry' para poder executar os metodos precisamos de object
-      entries.push(entry);
-    });
-    return entries;
-  }
-
-  protected jsonDataToResource(jsonData: any): Entry {
-    const entries: Entry[] = [];
-    return jsonData as Entry;
+    );  
   }
 }
