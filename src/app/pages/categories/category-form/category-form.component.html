@@ -7,7 +7,7 @@
 </nav>
 
 <div class="row mb-4 ">
-  <div class="col-md">
+  <div class="col-md-8">
     <h1 class="h2 border-left pl-2">
       {{pageTitle}}
     </h1>
@@ -19,7 +19,7 @@
   </div>
 </div>
 
-<form [formGroup]='categoryForm' (submit)= 'submitForm()'>
+<form [formGroup]='resourceForm' (submit)= 'submitForm()'>
   
 
   <div class="card">
@@ -31,9 +31,9 @@
         <div class="form-group col-md-4">
           <label for="name">Nome</label>
           <input type="text" class="form-control" id="name"  formControlName='name'>
-          <div class="text-danger" *ngIf="categoryForm.get('name').invalid || categoryForm.get('name').touched">
-            <div *ngIf="categoryForm.get('name').errors.required">Dado obrigatório </div>
-            <div *ngIf="categoryForm.get('name').errors.minLength">Deve ter no minimo 2 caracteres </div>
+          <div class="text-danger" *ngIf="resourceForm.get('name').invalid || resourceForm.get('name').touched">
+            <div *ngIf="resourceForm.get('name').errors.required">Dado obrigatório </div>
+            <div *ngIf="resourceForm.get('name').errors.minLength">Deve ter no minimo 2 caracteres </div>
           </div>
         </div>
 
@@ -51,6 +51,6 @@
       <li *ngFor="let error of serverErrorMessages">{{error}}</li>
     </ul>
   </div>
-  <button [disabled]='submittingForm || categoryForm.invalid' type="submit" class="btn btn-primary btn-lg float-right mt-3">Salvar</button>
+  <button [disabled]='submittingForm || resourceForm.invalid' type="submit" class="btn btn-primary btn-lg float-right mt-3">Salvar</button>
   
 </form>
